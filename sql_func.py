@@ -23,13 +23,6 @@ def add_user(id, link):
     (id, "Игрок", 2500000, now.strftime('%d-%m-%Y, %H:%M'), None, 0, link))
     return conn.commit()
 
-async def prize_progress(id, title, sum, types=None):
-    add_money(sum, id)
-    await bot.send_message(chat_id=id, text=f"<b>[Достижения 🏆]</b> Достижение «{progress_name.get(title)}» выполнено!{choice(like)}\n"
-    f"{choice(info)} Награда - {ranks_int(sum)}$ на ваш баланс {choice(joi)}\n"
-    f"{check_balance(id, True)}")
-    cursor.execute(f"UPDATE progress_info SET {title} = ? WHERE id_user = ?", (True, id))
-    return conn.commit()
 
 
 async def add_ref(invite_id, id):
