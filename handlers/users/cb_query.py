@@ -132,6 +132,22 @@ async def cube_play(call: CallbackQuery):
         f"{check_balance(user_id, True)}", reply_markup=ikb_cube)
     await bot.answer_callback_query(call.id, cache_time=5)
 
+
+@dp.callback_query_handler(lambda call: call.data.startswith("Дар"))
+async def darts(call: CallbackQuery):
+    user_id = call.from_user.id
+    chat_id = call.message.chat.id
+    sum_bid = int(call.data.split()[1])
+    if sum_bid >= 100:
+        if check_money(sum_bid, user_id):
+            dice_msg = await bot.send_dice(chat_id, emoji='🎯')
+            darts_num = dice_msg.dice.value
+            profit = darts_profit.get(darts_num)
+            profit_sum = int(sum_bid * profit - sum_bid)
+            print(profit_sum)
+            print(sum_bid * profit - sum
+
+
 @dp.callback_query_handler(lambda call: call.data.startswith("Акц"))
 async def stock_play(call: CallbackQuery):
     user_id = call.from_user.id
