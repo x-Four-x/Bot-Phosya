@@ -1,0 +1,1 @@
+(lambda N:print(*[(lambda i:'    '*i+str(9**i))(N-abs(n)) for n in range(-N,N+1)],sep='\n'))(10)
