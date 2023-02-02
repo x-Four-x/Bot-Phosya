@@ -94,8 +94,7 @@ async def football(call: CallbackQuery):
             dice_msg = await bot.send_dice(chat_id, emoji='⚽')
             football_num = dice_msg.dice.value
             profit = football_profit.get(football_num)
-            profit_sum = round(sum_bid * profit - sum_bid, 0)
-            print(profit_sum)
+            profit_sum = int(sum_bid * profit - sum_bid)
             add_money(profit_sum, user_id)
             await asyncio.sleep(4.9)
             if profit_sum > 0:
