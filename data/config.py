@@ -38,6 +38,15 @@ price_stock = {
     4: 5_000_000
 }
 
+
+darts_profit = {
+    1: 0,
+    2: 0.5,
+    3: 1,
+    4: 1.5,
+    5: 2
+}
+
 football_profit = {
     1: 0,
     2: 0.5,

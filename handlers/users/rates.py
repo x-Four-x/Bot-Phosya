@@ -14,7 +14,7 @@ from fuzzywuzzy import process
 
 
 @dp.message_handler(lambda message: message.text.replace(" ", "").replace('k', '000').replace('к', '000').isdigit() and check_game(message.from_user.id)=='football')
-async def trigers_cas(message: types.Message):
+async def trigers_foot(message: types.Message):
     user_id = message.from_user.id
     sum_bid = int(message.text.replace('k', '000').replace('к', '000'))
     if sum_bid >= 100:
@@ -39,7 +39,6 @@ async def trigers_cas(message: types.Message):
             await message.answer(f"<b>[Игры - Футбол ⚽]</b> {link_user(user_id)}, у вас не достаточно средств {choice(sad)}")
     else:
         await message.answer(f"<b>[Игры - Футбол ⚽]</b> {link_user(user_id)}, минимальная ставка 100$ {choice(info)}")
-
 
 
 @dp.message_handler(lambda message: message.text.replace(" ", "").replace('k', '000').replace('к', '000').isdigit() and check_game(message.from_user.id)=='casino')
@@ -70,6 +69,11 @@ async def trigers_cas(message: types.Message):
     else:
         await message.answer(f"<b>[Игры - Казино 🎰]</b> <a href='{user_url}'>{check_name(user_id)}</a>, минимальная ставка 100$ {choice(info)}")
 
+
+@dp.message_handler(lambda message: message.text.replace(" ", "").replace('k', '000').replace('к', '000').isdigit() and check_game(message.from_user.id)=='casino')
+async def trigers_darts(message: types.Message):
+    user_id = message.from_user.id
+    sum_bid = int(message.text.replace('k', '000').replace('к', '000'))
 
 @dp.message_handler(lambda message: message.text.replace(" ", "").replace('k', '000').replace('к', '000').isdigit() and check_game(message.from_user.id)=='cup')
 async def trigers_cup(message: types.Message):

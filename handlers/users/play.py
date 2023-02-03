@@ -41,7 +41,7 @@ async def football(message: types.Message):
 @dp.message_handler(lambda message: fuzz.ratio(f"{message.text.lower()}", "дартс") >= 75)
 async def football(message: types.Message):
     user_id = message.from_user.id
-    add_game(id=user_id, game='football')
+    add_game(id=user_id, game='darts')
     await message.answer(f"<b>[Игры - Дартс 🎯]</b> {link_user(user_id)}, напиши сумму ставки\n"
     f"{choice(info)} Минимальная сумма ставки - 100$\n"
     f"{check_balance(user_id, True)}", reply_markup=rates_inl("🎯", user_id, "Дар"))

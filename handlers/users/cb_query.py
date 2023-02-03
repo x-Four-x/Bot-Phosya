@@ -134,17 +134,30 @@ async def cube_play(call: CallbackQuery):
 
 @dp.callback_query_handler(lambda call: call.data.startswith("Дар"))
 async def darts(call: CallbackQuery):
-    user_id = call.from_user.id
-    chat_id = call.message.chat.id
-    sum_bid = int(call.data.split()[1])
-    if sum_bid >= 100:
-        if check_money(sum_bid, user_id):
-            dice_msg = await bot.send_dice(chat_id, emoji='🎯')
-            darts_num = dice_msg.dice.value
-            profit = darts_profit.get(darts_num)
-            profit_sum = int(sum_bid * profit - sum_bid)
-            print(profit_sum)
-            print(sum_bid * profit - sum
+    user_id = call.from_user.id
+    chat_id = call.message.chat.id
+    sum_bid = int(call.data.split()[1])
+    if sum_bid >= 100:
+        if check_money(sum_bid, user_id):
+            dice_msg = await bot.send_dice(chat_id, emoji='🎯')
+            darts_num = dice_msg.dice.value
+            profit = darts_profit.get(darts_num)
+            profit_sum = int(sum_bid * profit - sum_bid)
+            add_money(profit_sum, user_id)
+            await asyncio.sleep(4.9)
+            if profit_sum > 0:
+                await call.message.answer(f"<b>[Игры - Дартс 🎯]</b> {link_user(user_id)}, вы выиграли {ranks_int(profit_sum)}$ ({profit}x) {choice(joi)}\n"
+                f"{check_balance(user_id, True)}", reply_markup=rates_inl('🎯', user_id, "Дар"))
+            elif profit_sum == 0:
+                await call.message.answer(f"<b>[Игры - Дартс 🎯]</b> {link_user(user_id)}, деньги остаются у вас ({profit}x) {choice(joi)}\n"
+                f"{check_balance(user_id, True)}", reply_markup=rates_inl('🎯', user_id, "Дар"))
+            else:
+                await call.message.answer(f"<b>[Игры - Дартс 🎯]</b> {link_user(user_id)}, вы проиграли {ranks_int(profit_sum*-1)}$ ({profit}x) {choice(sad)}\n"
+                f"{check_balance(user_id, True)}", reply_markup=rates_inl('🎯', user_id, "Дар"))
+        else:
+            await call.message.answer(f"<b>[Игры - Дартс 🎯]</b> {link_user(user_id)}, у вас не достаточно средств {choice(sad)}")
+    else:
+        await call.message.answer(f"<b>[Игры - Дартс 🎯]</b> {link_user(user_id)}, минимальная ставка 100$ {choice(info)}")
 
 
 @dp.callback_query_handler(lambda call: call.data.startswith("Акц"))
