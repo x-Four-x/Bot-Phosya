@@ -14,17 +14,25 @@ from fuzzywuzzy import fuzz
 @dp.message_handler(commands=["games"])
 async def play(message: types.Message):
     user_id = message.from_user.id
-    user_url = message.from_user.url
     await message.answer(
         f"<b>[Игры]</b> {link_user(user_id)}, выбери одну игру из списка игр нижне ⬇",
         reply_markup=kb_play_list)
+
+
+@dp.message_handler(lambda message: any([fuzz.ratio(f"{message.text.lower()}", "боулинг") >= 75, fuzz.ratio(f"{message.text.lower()}", "боул") >= 75,
+fuzz.ratio(f"{message.text.lower()}", "bowling") >= 75, fuzz.ratio(f"{message.text.lower()}", "bowl") >= 75]))
+async def bowling(message: types.Message):
+    user_id = message.from_user.id
+    add_game(id=user_id, game='bowl')
+    await message.answer(f"<b>[Игры - Боулинг 🎳]</b> {link_user(user_id)}, напиши сумму ставки\n"
+    f"{choice(info)} Минимальная сумма ставки - 100$\n"
+    f"{check_balance(user_id, True)}", reply_markup=rates_inl("🎳", user_id, "Боу"))
 
 
 @dp.message_handler(lambda message: any([fuzz.ratio(f"{message.text.lower()}", "игры") >= 75, fuzz.ratio(f"{message.text.lower()}", "игра") >= 75,
 fuzz.ratio(f"{message.text.lower()}", "игра") >= 75, fuzz.ratio(f"{message.text.lower()}", "Список игр") >= 75]))
 async def play(message: types.Message):
     user_id = message.from_user.id
-    user_url = message.from_user.url
     await message.answer(
         f"<b>[Игры]</b> {link_user(user_id)}, выбери одну игру из списка игр нижне ⬇",
         reply_markup=kb_play_list)

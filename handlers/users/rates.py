@@ -70,10 +70,60 @@ async def trigers_cas(message: types.Message):
         await message.answer(f"<b>[Игры - Казино 🎰]</b> <a href='{user_url}'>{check_name(user_id)}</a>, минимальная ставка 100$ {choice(info)}")
 
 
-@dp.message_handler(lambda message: message.text.replace(" ", "").replace('k', '000').replace('к', '000').isdigit() and check_game(message.from_user.id)=='casino')
-async def trigers_darts(message: types.Message):
+@dp.message_handler(lambda message: message.text.replace(" ", "").replace('k', '000').replace('к', '000').isdigit() and check_game(message.from_user.id)=='darts')
+async def trigers_bowl(message: types.Message):
     user_id = message.from_user.id
+    chat_id = message.chat.id
     sum_bid = int(message.text.replace('k', '000').replace('к', '000'))
+    if sum_bid >= 100:
+        if check_money(sum_bid, user_id):
+            dice_msg = await bot.send_dice(chat_id, emoji='🎯')
+            darts_num = dice_msg.dice.value
+            profit = darts_profit.get(darts_num)
+            profit_sum = int(sum_bid * profit - sum_bid)
+            add_money(profit_sum, user_id)
+            await asyncio.sleep(4.9)
+            if profit_sum > 0:
+                await message.answer(f"<b>[Игры - Дартс 🎯]</b> {link_user(user_id)}, вы выиграли {ranks_int(profit_sum)}$ ({profit}x) {choice(joi)}\n"
+                f"{check_balance(user_id, True)}", reply_markup=rates_inl('🎯', user_id, "Дар"))
+            elif profit_sum == 0:
+                await message.answer(f"<b>[Игры - Дартс 🎯]</b> {link_user(user_id)}, деньги остаются у вас ({profit}x) {choice(joi)}\n"
+                f"{check_balance(user_id, True)}", reply_markup=rates_inl('🎯', user_id, "Дар"))
+            else:
+                await message.answer(f"<b>[Игры - Дартс 🎯]</b> {link_user(user_id)}, вы проиграли {ranks_int(profit_sum*-1)}$ ({profit}x) {choice(sad)}\n"
+                f"{check_balance(user_id, True)}", reply_markup=rates_inl('🎯', user_id, "Дар"))
+        else:
+            await message.answer(f"<b>[Игры - Дартс 🎯]</b> {link_user(user_id)}, у вас не достаточно средств {choice(sad)}")
+    else:
+        await message.answer(f"<b>[Игры - Дартс 🎯]</b> {link_user(user_id)}, минимальная ставка 100$ {choice(info)}")
+
+@dp.message_handler(lambda message: message.text.replace(" ", "").replace('k', '000').replace('к', '000').isdigit() and check_game(message.from_user.id)=='bowl')
+async def trigers_darts(message: types.Message):
+    user_id = call.from_user.id
+    chat_id = call.message.chat.id
+    sum_bid = int(call.data.split()[1])
+    if sum_bid >= 100:
+        if check_money(sum_bid, user_id):
+            dice_msg = await bot.send_dice(chat_id, emoji='🎳')
+            bowl_num = dice_msg.dice.value
+            profit = football_profit.get(bowl_num)
+            profit_sum = int(sum_bid * profit - sum_bid)
+            add_money(profit_sum, user_id)
+            print(bowl_num)
+            await asyncio.sleep(4.9)
+            if profit_sum > 0:
+                await message.answer(f"<b>[Игры - Боулинг 🎳]</b> {link_user(user_id)}, страйк! {ranks_int(profit_sum)}$ ({profit}x) {choice(joi)}\n"
+                f"{check_balance(user_id, True)}", reply_markup=rates_inl('🎳', user_id, "Боу"))
+            elif profit_sum == 0:
+                await message.answer(f"<b>[Игры - Боулинг 🎳]</b> {link_user(user_id)}, деньги остаются у вас ({profit}x) {choice(joi)}\n"
+                f"{check_balance(user_id, True)}", reply_markup=rates_inl('🎳', user_id, "Боу"))
+            else:
+                await message.answer(f"<b>[Игры - Боулинг 🎳]</b> {link_user(user_id)}, вы проиграли {ranks_int(profit_sum*-1)}$ ({profit}x) {choice(sad)}\n"
+                f"{check_balance(user_id, True)}", reply_markup=rates_inl('🎳', user_id, "Боу"))
+        else:
+            await message.answer(f"<b>[Игры - Боулинг 🎳]</b> {link_user(user_id)}, у вас не достаточно средств {choice(sad)}")
+    else:
+        await message.answer(f"<b>[Игры - Боулинг 🎳]</b> {link_user(user_id)}, минимальная ставка 100$ {choice(info)}")
 
 @dp.message_handler(lambda message: message.text.replace(" ", "").replace('k', '000').replace('к', '000').isdigit() and check_game(message.from_user.id)=='cup')
 async def trigers_cup(message: types.Message):

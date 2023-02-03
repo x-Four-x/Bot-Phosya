@@ -56,6 +56,37 @@ async def cup_bid(call: CallbackQuery):
         f"{check_balance(user_id, True)}")
     await bot.answer_callback_query(call.id, cache_time=50)
 
+
+@dp.callback_query_handler(lambda call: call.data.startswith('Боу'))
+async def bowling_play(call: CallbackQuery):
+    user_id = call.from_user.id
+    chat_id = call.message.chat.id
+    sum_bid = int(call.data.split()[1])
+    if sum_bid >= 100:
+        if check_money(sum_bid, user_id):
+            dice_msg = await bot.send_dice(chat_id, emoji='🎳')
+            bowl_num = dice_msg.dice.value
+            profit = football_profit.get(bowl_num)
+            profit_sum = int(sum_bid * profit - sum_bid)
+            add_money(profit_sum, user_id)
+            print(bowl_num)
+            await asyncio.sleep(4.9)
+            if profit_sum > 0:
+                await call.message.answer(f"<b>[Игры - Боулинг 🎳]</b> {link_user(user_id)}, страйк! {ranks_int(profit_sum)}$ ({profit}x) {choice(joi)}\n"
+                f"{check_balance(user_id, True)}", reply_markup=rates_inl('🎳', user_id, "Боу"))
+            elif profit_sum == 0:
+                await call.message.answer(f"<b>[Игры - Боулинг 🎳]</b> {link_user(user_id)}, деньги остаются у вас ({profit}x) {choice(joi)}\n"
+                f"{check_balance(user_id, True)}", reply_markup=rates_inl('🎳', user_id, "Боу"))
+            else:
+                await call.message.answer(f"<b>[Игры - Боулинг 🎳]</b> {link_user(user_id)}, вы проиграли {ranks_int(profit_sum*-1)}$ ({profit}x) {choice(sad)}\n"
+                f"{check_balance(user_id, True)}", reply_markup=rates_inl('🎳', user_id, "Боу"))
+        else:
+            await call.message.answer(f"<b>[Игры - Боулинг 🎳]</b> {link_user(user_id)}, у вас не достаточно средств {choice(sad)}")
+    else:
+        await call.message.answer(f"<b>[Игры - Боулинг 🎳]</b> {link_user(user_id)}, минимальная ставка 100$ {choice(info)}")
+
+    await bot.answer_callback_query(call.id, cache_time=5)
+
 @dp.callback_query_handler(lambda call: call.data.startswith('Каз'))
 async def casino_play(call: CallbackQuery):
     user_id = call.from_user.id
@@ -96,6 +127,7 @@ async def football(call: CallbackQuery):
             profit = football_profit.get(football_num)
             profit_sum = int(sum_bid * profit - sum_bid)
             add_money(profit_sum, user_id)
+            print(profit_sum)
             await asyncio.sleep(4.9)
             if profit_sum > 0:
                 await call.message.answer(f"<b>[Игры - Футбол ⚽]</b> {link_user(user_id)}, вы выиграли {ranks_int(profit_sum)}$ ({profit}x) {choice(joi)}\n"
@@ -158,7 +190,7 @@ async def darts(call: CallbackQuery):
             await call.message.answer(f"<b>[Игры - Дартс 🎯]</b> {link_user(user_id)}, у вас не достаточно средств {choice(sad)}")
     else:
         await call.message.answer(f"<b>[Игры - Дартс 🎯]</b> {link_user(user_id)}, минимальная ставка 100$ {choice(info)}")
-
+    await bot.answer_callback_query(call.id, cache_time=5)
 
 @dp.callback_query_handler(lambda call: call.data.startswith("Акц"))
 async def stock_play(call: CallbackQuery):

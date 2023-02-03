@@ -13,6 +13,9 @@ kb_play_list = ReplyKeyboardMarkup(
             KeyboardButton(text='Дартс 🎯')
         ],
         [
+            KeyboardButton(text='Боулинг 🎳')
+        ],
+        [
             KeyboardButton("⏪ Главное меню")
         ]
     ],
